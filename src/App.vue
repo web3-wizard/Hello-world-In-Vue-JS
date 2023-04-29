@@ -1,137 +1,36 @@
 <template>
-  <h2>Job Application</h2>
-  <div>
-    <form @submit.prevent="submitForm">
-      <div>
-        <label for="name">Name</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          v-model.trim="formValues.name"
-        />
-      </div>
+  <h1>Computed Properties</h1>
+  <hr />
 
-      <div>
-        <label for="age">Age : </label>
-        <input
-          type="number"
-          name="age"
-          id="age"
-          v-model.number="formValues.age"
-          @keyup.enter="checkAge"
-        />
-      </div>
+  <h3>Get Total Method : {{ getTotal() }}</h3>
+  <h3>Total Computed : {{ total }}</h3>
+  <hr />
 
-      <div>
-        <label for="profile">Profile Summery</label>
-        <textarea
-          name="profile"
-          id="profile"
-          v-model.trim.lazy="formValues.profileSummery"
-        />
-      </div>
+  <input type="text" name="country" id="country" v-model="country" />
+  <hr />
+  <template v-for="item in items" :key="item.id">
+    <h5 v-if="item.price > 1000">{{ item.name }} {{ item.price }}</h5>
+  </template>
+  <h4 v-for="item in expensiveItens" :key="item.id">
+    {{ item.name }} {{ item.price }}
+  </h4>
+  <hr />
 
-      <div>
-        <label for="country">Country</label>
-        <select name="country" id="country" v-model="formValues.country">
-          <option value="" selected>Select an option</option>
-          <option value="india">India</option>
-          <option value="uk">UK</option>
-          <option value="usa">USA</option>
-        </select>
-      </div>
+  <h2>{{ fullName }}, you are nice!</h2>
+  <button @click="changeName">Chnage Name</button>
+  <hr />
 
-      <div>
-        <label for="jobLocation">Job Location</label>
-        <select
-          name="jobLocation"
-          multiple
-          id="jobLocation"
-          v-model="formValues.jobLocation"
-        >
-          <option value="india">India</option>
-          <option value="uk">UK</option>
-          <option value="usa">USA</option>
-        </select>
-      </div>
+  <h1>Volume Tracker (0-20) - Watch</h1>
+  <h3>Current Volume - {{ volume }}</h3>
+  <button @click="volume += 2">Increase</button>
+  <button @click="volume -= 2">Decrease</button>
+  <hr />
 
-      <div>
-        <input
-          type="checkbox"
-          name="remoteWork"
-          id="remoteWork"
-          v-model="formValues.remoteWork"
-        />
-        <label for="remotework">Open to remote work?</label>
-      </div>
-
-      <div>
-        <label>Skill Set : </label>
-        <input
-          type="checkbox"
-          value="html"
-          id="html"
-          v-model="formValues.skillSets"
-        />
-        <label for="html">HTML</label>
-        <input
-          type="checkbox"
-          value="css"
-          id="css"
-          v-model="formValues.skillSets"
-        />
-        <label for="css">CSS</label>
-        <input
-          type="checkbox"
-          value="javascript"
-          id="javascript"
-          v-model="formValues.skillSets"
-        />
-        <label for="javascript">Javascript</label>
-      </div>
-
-      <div>
-        <label>Year Of Exprience : </label>
-        <input
-          type="radio"
-          value="0-2"
-          id="0-2"
-          v-model="formValues.yearOfExprience"
-        />
-        <label for="0-2">0-2</label>
-        <input
-          type="radio"
-          value="3-5"
-          id="3-5"
-          v-model="formValues.yearOfExprience"
-        />
-        <label for="3-5">3-5</label>
-        <input
-          type="radio"
-          value="6-10"
-          id="6-10"
-          v-model="formValues.yearOfExprience"
-        />
-        <label for="6-10">6-10</label>
-        <input
-          type="radio"
-          value="10+"
-          id="10+"
-          v-model="formValues.yearOfExprience"
-        />
-        <label for="10+">10+</label>
-      </div>
-
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-  </div>
-
-  <div>
-    <pre>{{ JSON.stringify(formValues, null, 2) }}</pre>
-  </div>
+  <h1>Imediate & Deep Watch</h1>
+  <input type="text" name="movie" id="movie" v-model="movie" />
+  <br />
+  <input type="text" v-model="movieInfo.title" placeholder="movie title" />
+  <input type="text" v-model="movieInfo.actor" placeholder="movie actor" />
 </template>
 
 <script>
@@ -139,26 +38,91 @@ export default {
   name: "App",
   data() {
     return {
-      formValues: {
-        name: "",
-        age: null,
-        profileSummery: "",
-        country: "",
-        jobLocation: [],
-        remoteWork: false,
-        skillSets: [],
-        yearOfExprience: "",
+      items: [
+        {
+          id: 1,
+          name: "phone",
+          price: 13000,
+        },
+        {
+          id: 2,
+          name: "laptop",
+          price: 35000,
+        },
+        {
+          id: 3,
+          name: "mouse",
+          price: 700,
+        },
+      ],
+      country: "",
+      firstName: "Spider",
+      lastName: "Man",
+      volume: 0,
+      movie: "ironman",
+      movieInfo: {
+        title: "",
+        actor: "",
       },
     };
   },
   methods: {
-    submitForm() {
-      console.log(this.formValues);
+    getTotal() {
+      console.log("Get Total Method Call");
+      return this.items.reduce((total, curr) => (total += curr.price), 0);
     },
-    checkAge() {
-      if (this.formValues.age < 18) {
-        alert("You are not eligible!");
+    changeName() {
+      this.fullName = "Iron Man";
+    },
+  },
+  computed: {
+    total() {
+      console.log("Total Computed Call");
+      return this.items.reduce((total, curr) => (total += curr.price), 0);
+    },
+    expensiveItens() {
+      return this.items.filter((item) => item.price > 1000);
+    },
+    fullName: {
+      get() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+      set(value) {
+        const names = value.split(" ");
+        this.firstName = names[0];
+        this.lastName = names[1];
+      },
+    },
+  },
+  watch: {
+    volume(newValue, oldValue) {
+      if (newValue > 20) {
+        alert("Max Volume!");
+        this.volume = oldValue;
       }
+      if (newValue < 0) {
+        alert("Min Volume!");
+        this.volume = oldValue;
+      }
+      if (newValue > oldValue && newValue === 16) {
+        alert(
+          "Listing to a high volume for a long time may damage your hearing!"
+        );
+      }
+    },
+    movie: {
+      handler(newValue) {
+        console.log(`Calling Api for movie: ${newValue}`);
+      },
+      immediate: true,
+    },
+    movieInfo: {
+      handler(newValue) {
+        console.log(
+          `Calling Api for movie title= ${newValue.title} & actor= ${newValue.actor}`
+        );
+      },
+      deep: true,
     },
   },
 };
